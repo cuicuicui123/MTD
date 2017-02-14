@@ -18,6 +18,13 @@ public class AppContext extends Application {
     private static final String TAG = AppContext.class.getSimpleName();
     private static final String APP_CACAHE_DIRNAME = "/webcache";
     public static long TIME_SPAN = 1000 / 24;
+    public int mGridWidth;
+    public int mGridHeight;
+
+    public int LEFT = 1;
+    public int RIGHT = 2;
+    public int TOP = 3;
+    public int BOTTOM = 0;
 
     //singleton
     private static AppContext appContext = null;
@@ -43,6 +50,8 @@ public class AppContext extends Application {
                     getSystemService(Context.WINDOW_SERVICE);
             display = windowManager.getDefaultDisplay();
         }
+        mGridWidth = display.getWidth() / 12;
+        mGridHeight = display.getHeight() / 8;
     }
 
     public String getCachePath() {
@@ -87,6 +96,12 @@ public class AppContext extends Application {
         return display.getWidth() / 4;
     }
 
+    public int getGridWidth() {
+        return mGridWidth;
+    }
 
+    public int getGridHeight() {
+        return mGridHeight;
+    }
 }
 

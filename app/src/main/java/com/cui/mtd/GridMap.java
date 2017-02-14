@@ -222,5 +222,9 @@ public class GridMap {
         }
     }
 
+    public PathNode getRootNode(){
+        return mRootNode;
+    }
+
 
 }

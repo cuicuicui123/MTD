@@ -2,7 +2,7 @@ package com.cui.mtd;
 
 /**
  * Created by Cui on 2017/2/9.
- * 地图网格节点类，判断是否可以防止防御塔
+ * 地图网格节点类，判断是否可以放置防御塔
  */
 
 public class GridNode {

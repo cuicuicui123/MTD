@@ -20,8 +20,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public boolean mHasSurface;
     private int mDisplayWidth;
     private int mDisplayHeight;
+    private long mTime;
 
     private GridMap mGridMap;
+    private EnemyPresenter mEnemyPresenter;
 
     public GameView(Context context) {
         super(context);
@@ -48,6 +50,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         mDisplayWidth = mAppContext.getWindowWidth();
         mDisplayHeight = mAppContext.getWindowHeight();
         mGridMap = new GridMap();
+        mEnemyPresenter = new EnemyPresenterImpl(mGridMap.getRootNode());
         mHolder = getHolder();
         mHolder.addCallback(this);
         mHasSurface = false;
@@ -131,6 +134,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 Canvas canvas = mHolder.lockCanvas();
                 if (canvas != null) {
                     mGridMap.setCanvas(canvas);
+                    mEnemyPresenter.setCanvas(canvas);
+                    mEnemyPresenter.move();
                     mHolder.unlockCanvasAndPost(canvas);
                 }
                 try {
