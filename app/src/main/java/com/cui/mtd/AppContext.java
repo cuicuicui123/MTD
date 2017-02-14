@@ -26,7 +26,7 @@ public class AppContext extends Application {
     public int TOP = 3;
     public int BOTTOM = 0;
 
-    private int n = 1;
+    private int n = 2;
 
     //singleton
     private static AppContext appContext = null;
