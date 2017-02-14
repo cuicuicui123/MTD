@@ -7,17 +7,26 @@ package com.cui.mtd;
 
 public class GridNode {
     private boolean mCanPlace;
+    private NodeObject mNodeObject;
 
     public GridNode() {
-        mCanPlace = true;
+        mCanPlace = false;
     }
 
-    private boolean canPlace(){
+    public boolean canPlace(){
         return mCanPlace;
     }
 
-    private void setCanPlace(boolean canPlace){
+    public void setCanPlace(boolean canPlace){
         mCanPlace = canPlace;
+    }
+
+    public void setTag(NodeObject nodeObject){
+        mNodeObject = nodeObject;
+    }
+
+    public NodeObject getNodeObject(){
+        return mNodeObject;
     }
 
 }

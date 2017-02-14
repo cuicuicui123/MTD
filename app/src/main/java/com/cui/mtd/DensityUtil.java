@@ -5,6 +5,7 @@ import android.util.DisplayMetrics;
 
 /**
  * Created by Cui on 2016/10/30.
+ * 像素和密度转换的工具
  */
 
 public class DensityUtil {

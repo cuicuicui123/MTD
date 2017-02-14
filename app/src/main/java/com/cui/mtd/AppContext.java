@@ -13,9 +13,6 @@ import java.io.File;
 
 /**
  * 全局应用程序类：用于保存和调用全局应用配置及访问网络数据
- *
- * @author linjizong
- * @created 2015-3-22
  */
 public class AppContext extends Application {
     private static final String TAG = AppContext.class.getSimpleName();

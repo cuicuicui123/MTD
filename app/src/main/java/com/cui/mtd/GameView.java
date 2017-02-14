@@ -8,6 +8,7 @@ import android.view.SurfaceView;
 
 /**
  * Created by Cui on 2017/2/9.
+ * 游戏界面类，surfaceView
  */
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
@@ -37,6 +38,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         init(context);
     }
 
+    /**
+     * 初始化数据
+     * @param context 传入context
+     */
     private void init(Context context){
         mAppContext = AppContext.getInstance();
         mContext = context;
@@ -48,6 +53,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         mHasSurface = false;
     }
 
+    /**
+     * 在onMeasure里面确定主界面的大小
+     * @param widthMeasureSpec
+     * @param heightMeasureSpec
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -56,6 +66,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
     }
 
+    /**
+     * 在surfaceCreated中开始运行线程
+     * @param holder
+     */
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         mHasSurface = true;
@@ -67,12 +81,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
+    /**
+     * surfaceDestroyed之后停止线程
+     * @param holder
+     */
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         mHasSurface = false;
         pause();
     }
 
+    /**
+     * 开始线程的方法
+     */
     public void resume(){
         if (mMainThread == null) {
             mMainThread = new MainThread();
@@ -82,6 +103,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    /**
+     * 停止线程的方法
+     */
     public void pause() {
         if (mMainThread != null) {
             mMainThread.stopThread();
@@ -89,6 +113,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    /**
+     * surfaceView的主要线程
+     */
     class MainThread extends Thread{
         public boolean mStart;
 
@@ -114,6 +141,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
+        /**
+         * 线程提供停止自己的方法
+         */
         public void stopThread(){
             mStart = false;
         }
