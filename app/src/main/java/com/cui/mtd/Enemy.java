@@ -38,6 +38,7 @@ public class Enemy {
         mHp = 40;
         mWidth = mAppContext.getWindowHeight() / 8;
         mHeight = mWidth;
+        mPosition = mAppContext.RIGHT;
         getEnemyWidthAndHeight();
     }
 
