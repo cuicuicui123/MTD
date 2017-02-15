@@ -2,6 +2,11 @@ package com.cui.mtd;
 
 import android.graphics.Canvas;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,14 +15,20 @@ import java.util.List;
  */
 
 public class EnemyPresenterImpl implements EnemyPresenter {
-    private List<Enemy> mEnemyList;
+    private List<Enemy> mAllEnemyList;
+    private List<Enemy> mCurrentEnemyList;
     private AppContext mAppContext;
     private Canvas mCanvas;
     private PathNode mRootNode;
     private PathNode mFirstNode;
 
+    private int mCurrentWave = 0;
+    private double mWait;
+    private long mCurrentTime;
+
     public EnemyPresenterImpl(PathNode rootNode) {
-        mEnemyList = new ArrayList<>();
+        mAllEnemyList = new ArrayList<>();
+        mCurrentEnemyList = new ArrayList<>();
         mAppContext = AppContext.getInstance();
         mRootNode = rootNode;
         mFirstNode = mRootNode.getThatNode();
@@ -26,30 +37,58 @@ public class EnemyPresenterImpl implements EnemyPresenter {
 
     @Override
     public void initEnemy() {
-        Enemy enemy = new Enemy();
-        PathNode thatNode = mRootNode.getThatNode();
-        enemy.setLocationX(thatNode.getLocationX() * mAppContext.getGridWidth());
-        enemy.setLocationY(thatNode.getLocationY() * mAppContext.getGridHeight());
-        enemy.setTargetNode(mFirstNode);
-        mEnemyList.add(enemy);
+        String result = getFromAssets("enemy");
+        try {
+            JSONObject jsonObject = new JSONObject(result);
+            JSONArray jsonArray = jsonObject.getJSONArray("Enemies");
+            int length = jsonArray.length();
+            for (int i = 0;i < length;i ++) {
+                JSONObject enemyJson = jsonArray.getJSONObject(i);
+                Enemy enemy = new Enemy();
+                enemy.setWave(enemyJson.getInt("Wave"));
+                enemy.setName(enemyJson.getString("EnemyName"));
+                enemy.setLevel(enemyJson.getInt("Level"));
+                enemy.setWait(enemyJson.getDouble("Wait"));
+                enemy.setTargetNode(mFirstNode);
+                mAllEnemyList.add(enemy);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public List<Enemy> getEnemyList() {
-        return mEnemyList;
+    //从assets 文件夹中获取文件并读取数据
+    public String getFromAssets(String fileName){
+        String result = "";
+        try {
+            InputStream in = mAppContext.getResources().getAssets().open(fileName);
+            //获取文件的字节数
+            int length = in.available();
+            //创建byte数组
+            byte[]  buffer = new byte[length];
+            //将文件中的数据读到byte数组中
+            in.read(buffer);
+            result = new String(buffer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public List<Enemy> getAllEnemyList() {
+        return mAllEnemyList;
     }
 
     @Override
     public void removeEnemy(Enemy enemy) {
-        if (mEnemyList.contains(enemy)) {
-            mEnemyList.remove(enemy);
-        }
+
     }
 
     @Override
     public void setCanvas(Canvas canvas) {
         mCanvas = canvas;
-        for (Enemy enemy:mEnemyList) {
+        enemyAppear();
+        for (Enemy enemy: mCurrentEnemyList) {
             enemy.drawSelf(canvas);
         }
     }
@@ -57,7 +96,7 @@ public class EnemyPresenterImpl implements EnemyPresenter {
     @Override
     public void move() {
         //先计算移动方向，上下左右四个方向
-        for (Enemy enemy:mEnemyList) {
+        for (Enemy enemy: mCurrentEnemyList) {
             PathNode thisNode = enemy.getTargetNode();
             PathNode thatNode = thisNode.getThatNode();
             double dis = calculateDistance(enemy, thatNode);
@@ -67,7 +106,7 @@ public class EnemyPresenterImpl implements EnemyPresenter {
                     thisNode = thatNode;
                     thatNode = thisNode.getThatNode();
                 } else {
-                    mEnemyList.remove(enemy);
+                    mCurrentEnemyList.remove(enemy);
                     return;
                 }
             }
@@ -91,6 +130,36 @@ public class EnemyPresenterImpl implements EnemyPresenter {
                 enemy.setPosition(mAppContext.TOP);
             }
             enemy.drawSelf(mCanvas);
+        }
+    }
+
+    /**
+     * 出怪
+     */
+    @Override
+    public void enemyAppear() {
+        if (mCurrentWave == 0) {
+            Enemy enemy = mAllEnemyList.get(0);
+            mCurrentEnemyList.add(enemy);
+            mAllEnemyList.remove(0);
+            mCurrentWave = enemy.getWave();
+            mCurrentTime = System.currentTimeMillis();
+            mWait = enemy.getWait();
+        } else {
+            Enemy enemy = mAllEnemyList.get(0);
+            if (enemy.getWave() == mCurrentWave) {
+                if (System.currentTimeMillis() - mCurrentTime >= enemy.getWait() * 1000) {
+                    mCurrentEnemyList.add(enemy);
+                    mAllEnemyList.remove(0);
+                    mCurrentTime = System.currentTimeMillis();
+                }
+            } else {
+                if (mCurrentEnemyList.size() <= 0) {
+                    mCurrentEnemyList.add(enemy);
+                    mAllEnemyList.remove(0);
+                    mCurrentTime = System.currentTimeMillis();
+                }
+            }
         }
     }
 

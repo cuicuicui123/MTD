@@ -19,6 +19,9 @@ public class GridMap {
     private float mGridWidth;
     private float mGridHeight;
     private int mGridPaintWidth;
+    private int mBacColor;
+    private int mWhite;
+    private int mGreen;
 
     private Canvas mCanvas;
     private AppContext mAppContext;
@@ -31,7 +34,11 @@ public class GridMap {
     private Paint mGridRectPaint;
     private Paint mPathPaint;
 
-    public GridMap() {
+    private boolean mHasSelectTower = false;
+
+    private static GridMap mInstance;
+
+    private GridMap() {
         mAppContext = AppContext.getInstance();
         mDisplayWidth = mAppContext.getWindowWidth();
         mDisplayHeight = mAppContext.getWindowHeight();
@@ -49,14 +56,28 @@ public class GridMap {
         mGridRectPaint = new Paint();
         mPathPaint = new Paint();
         mPathPaint.setColor(mAppContext.getResources().getColor(R.color.black));
+        mGreen = mAppContext.getResources().getColor(R.color.green);
+        mWhite = mAppContext.getResources().getColor(R.color.white);
+        mBacColor = mWhite;
         initNodeObject();
         initPath();
+    }
+
+    public static GridMap getInstance(){
+        if (mInstance == null) {
+            synchronized (GridMap.class) {
+                if (mInstance == null) {
+                    mInstance = new GridMap();
+                }
+            }
+        }
+        return mInstance;
     }
 
     public void setCanvas(Canvas canvas){
         mCanvas = canvas;
         mCanvas.drawRect(0, 0, mDisplayWidth, mDisplayHeight, mBacPaint);
-//        drawBackGround();
+
         drawColorRect();
         drawGrid();
         drawPathNode(mRootNode.getThatNode());
@@ -99,7 +120,7 @@ public class GridMap {
         for (int i = 0;i < 12;i ++) {
             for (int j = 0;j < 8;j ++) {
                 NodeObject nodeObject = mNodeObjects[i][j];
-                mGridRectPaint.setColor(nodeObject.isPlace() ? green : red);
+                mGridRectPaint.setColor(nodeObject.isPlace() ? mBacColor : red);
                 float right = i == 11 ? mDisplayWidth : (i + 1) * mGridWidth;
                 float bottom = j == 7 ? mDisplayHeight : (j + 1) * mGridHeight;
                 mCanvas.drawRect(i * mGridWidth, j * mGridHeight, right, bottom, mGridRectPaint);
@@ -114,7 +135,9 @@ public class GridMap {
         for (int i = 0;i < 12;i ++) {
             for (int j = 0;j < 8;j ++) {
                 NodeObject nodeObject = new NodeObject();
-                nodeObject.setPlace(isGridOnPath(i, j));
+                nodeObject.setLocationX(i);
+                nodeObject.setLocationY(j);
+                nodeObject.setPlace(!isGridOnPath(i, j));
                 mNodeObjects[i][j] = nodeObject;
             }
         }
@@ -125,38 +148,38 @@ public class GridMap {
     }
 
     /**
-     * 判断格子是否出去路径之中
+     * 判断格子是否处于路径之中
      * @param i 横坐标
      * @param j 纵坐标
      * @return
      */
     private boolean isGridOnPath(int i, int j){
         if (i >= 0 && i < 4) {
-            if (j == 4) {
+            if (j == 3) {
                 return true;
             }
         }
 
         if (i == 4) {
-            if (j >= 4 && j < 7) {
+            if (j >= 3 && j < 6) {
                 return true;
             }
         }
 
         if (i > 4 && i < 8) {
-            if (j == 6) {
+            if (j == 5) {
                 return true;
             }
         }
 
         if (i == 8) {
-            if (j >= 4 && j <= 6) {
+            if (j >= 3 && j <= 5) {
                 return true;
             }
         }
 
         if (i > 8) {
-            if (j == 4) {
+            if (j == 3) {
                 return true;
             }
         }
@@ -181,27 +204,27 @@ public class GridMap {
         PathNode thisNode = pathNode;
         PathNode thatNode = new PathNode();
         thatNode.setLocationX(0);
-        thatNode.setLocationY(4);
+        thatNode.setLocationY(3);
         thisNode.setThatNode(thatNode);
         PathNode thatNode2 = new PathNode();
         thatNode2.setLocationX((float) 4.5);
-        thatNode2.setLocationY(4);
+        thatNode2.setLocationY(3);
         thatNode.setThatNode(thatNode2);
         PathNode thatNode3 = new PathNode();
         thatNode3.setLocationX((float) 4.5);
-        thatNode3.setLocationY(6);
+        thatNode3.setLocationY(5);
         thatNode2.setThatNode(thatNode3);
         PathNode thatNode4 = new PathNode();
         thatNode4.setLocationX((float) 8.5);
-        thatNode4.setLocationY(6);
+        thatNode4.setLocationY(5);
         thatNode3.setThatNode(thatNode4);
         PathNode thatNode5 = new PathNode();
         thatNode5.setLocationX((float) 8.5);
-        thatNode5.setLocationY(4);
+        thatNode5.setLocationY(3);
         thatNode4.setThatNode(thatNode5);
         PathNode thatNode6 = new PathNode();
         thatNode6.setLocationX(12);
-        thatNode6.setLocationY(4);
+        thatNode6.setLocationY(3);
         thatNode5.setThatNode(thatNode6);
     }
 
@@ -225,6 +248,17 @@ public class GridMap {
     public PathNode getRootNode(){
         return mRootNode;
     }
+
+    public NodeObject findNodeObjectByLocation(float x, float y){
+        int locationX = (int) (x / mAppContext.getGridWidth());
+        int locationY = (int) (y / mAppContext.getGridHeight());
+        return mNodeObjects[locationX][locationY];
+    }
+
+    public void setBacColor(int color){
+        mBacColor = color;
+    }
+
 
 
 }

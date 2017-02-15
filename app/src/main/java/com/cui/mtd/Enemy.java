@@ -19,6 +19,10 @@ public class Enemy {
     private int mEnemyHeight;
     private int mDirection;
     private int mPosition;
+    private int mWave;
+    private String mName;
+    private int mLevel;
+    private double mWait;
 
     private float mLocationX;
     private float mLocationY;
@@ -99,6 +103,42 @@ public class Enemy {
     public void setPosition(int direction){
         mDirection = direction;
         mPosition = 0;
+    }
+
+    public void setPicRes(int picRes) {
+        mPicRes = picRes;
+    }
+
+    public int getWave() {
+        return mWave;
+    }
+
+    public void setWave(int wave) {
+        mWave = wave;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String name) {
+        mName = name;
+    }
+
+    public int getLevel() {
+        return mLevel;
+    }
+
+    public void setLevel(int level) {
+        mLevel = level;
+    }
+
+    public double getWait() {
+        return mWait;
+    }
+
+    public void setWait(double wait) {
+        mWait = wait;
     }
 
     public void drawSelf(Canvas canvas){

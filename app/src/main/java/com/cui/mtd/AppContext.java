@@ -8,6 +8,7 @@ import android.app.Application;
 import android.content.Context;
 import android.view.Display;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -25,9 +26,7 @@ public class AppContext extends Application {
     public int RIGHT = 2;
     public int TOP = 3;
     public int BOTTOM = 0;
-
     private int n = 2;
-
     //singleton
     private static AppContext appContext = null;
     private Display display;
@@ -105,5 +104,14 @@ public class AppContext extends Application {
     public int getGridHeight() {
         return mGridHeight;
     }
+
+    /**
+     * 展示提示信息
+     * @param text 提示信息
+     */
+    public void makeToast(String text){
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    }
+
 }
 

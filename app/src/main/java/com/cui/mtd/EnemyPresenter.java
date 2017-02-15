@@ -12,8 +12,9 @@ import java.util.List;
 public interface EnemyPresenter {
 
     void initEnemy();
-    List<Enemy> getEnemyList();
+    List<Enemy> getAllEnemyList();
     void removeEnemy(Enemy enemy);
     void setCanvas(Canvas canvas);
     void move();
+    void enemyAppear();
 }
