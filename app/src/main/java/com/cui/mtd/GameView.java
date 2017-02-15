@@ -3,6 +3,7 @@ package com.cui.mtd;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -49,7 +50,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         mContext = context;
         mDisplayWidth = mAppContext.getWindowWidth();
         mDisplayHeight = mAppContext.getWindowHeight();
-        mGridMap = new GridMap();
+        mGridMap = GridMap.getInstance();
         mEnemyPresenter = new EnemyPresenterImpl(mGridMap.getRootNode());
         mHolder = getHolder();
         mHolder.addCallback(this);
@@ -116,6 +117,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             mMainThread = null;
         }
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return mTowerPresenter.handleTouchEvent(event);
+    }
+
+    //    @Override
+//    public boolean onTouch(View view, MotionEvent event) {
+//        Log.i("touch", "onTouch");
+//        mGridMap.handleTouchListener(event);
+//        return super.onTouchEvent(event);
+//    }
 
     /**
      * surfaceView的主要线程
