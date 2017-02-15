@@ -132,31 +132,31 @@ public class GridMap {
      */
     private boolean isGridOnPath(int i, int j){
         if (i >= 0 && i < 4) {
-            if (j == 4) {
+            if (j == 3) {
                 return true;
             }
         }
 
         if (i == 4) {
-            if (j >= 4 && j < 7) {
+            if (j >= 3 && j < 6) {
                 return true;
             }
         }
 
         if (i > 4 && i < 8) {
-            if (j == 6) {
+            if (j == 5) {
                 return true;
             }
         }
 
         if (i == 8) {
-            if (j >= 4 && j <= 6) {
+            if (j >= 3 && j <= 5) {
                 return true;
             }
         }
 
         if (i > 8) {
-            if (j == 4) {
+            if (j == 3) {
                 return true;
             }
         }
@@ -181,27 +181,27 @@ public class GridMap {
         PathNode thisNode = pathNode;
         PathNode thatNode = new PathNode();
         thatNode.setLocationX(0);
-        thatNode.setLocationY(4);
+        thatNode.setLocationY(3);
         thisNode.setThatNode(thatNode);
         PathNode thatNode2 = new PathNode();
         thatNode2.setLocationX((float) 4.5);
-        thatNode2.setLocationY(4);
+        thatNode2.setLocationY(3);
         thatNode.setThatNode(thatNode2);
         PathNode thatNode3 = new PathNode();
         thatNode3.setLocationX((float) 4.5);
-        thatNode3.setLocationY(6);
+        thatNode3.setLocationY(5);
         thatNode2.setThatNode(thatNode3);
         PathNode thatNode4 = new PathNode();
         thatNode4.setLocationX((float) 8.5);
-        thatNode4.setLocationY(6);
+        thatNode4.setLocationY(5);
         thatNode3.setThatNode(thatNode4);
         PathNode thatNode5 = new PathNode();
         thatNode5.setLocationX((float) 8.5);
-        thatNode5.setLocationY(4);
+        thatNode5.setLocationY(3);
         thatNode4.setThatNode(thatNode5);
         PathNode thatNode6 = new PathNode();
         thatNode6.setLocationX(12);
-        thatNode6.setLocationY(4);
+        thatNode6.setLocationY(3);
         thatNode5.setThatNode(thatNode6);
     }
 
