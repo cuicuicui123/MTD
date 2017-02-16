@@ -24,6 +24,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private long mTime;
 
     private GridMap mGridMap;
+    private GameManager mGameManager;
     private EnemyPresenter mEnemyPresenter;
     private TowerPresenter mTowerPresenter;
     public GameView(Context context) {
@@ -51,6 +52,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         mDisplayWidth = mAppContext.getWindowWidth();
         mDisplayHeight = mAppContext.getWindowHeight();
         mGridMap = GridMap.getInstance();
+        mGameManager = GameManager.getInstance();
+
         mEnemyPresenter = new EnemyPresenterImpl(mGridMap.getRootNode());
         mHolder = getHolder();
         mHolder.addCallback(this);
@@ -123,13 +126,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         return mTowerPresenter.handleTouchEvent(event);
     }
 
-    //    @Override
-//    public boolean onTouch(View view, MotionEvent event) {
-//        Log.i("touch", "onTouch");
-//        mGridMap.handleTouchListener(event);
-//        return super.onTouchEvent(event);
-//    }
-
     /**
      * surfaceView的主要线程
      */
@@ -151,6 +147,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     mEnemyPresenter.setCanvas(canvas);
                     mEnemyPresenter.move();
                     mTowerPresenter.setCanvas(canvas);
+                    mGameManager.setCanvas(canvas);
                     mHolder.unlockCanvasAndPost(canvas);
                 }
                 try {

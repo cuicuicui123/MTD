@@ -3,4 +3,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="grid_width">0.5dp</dimen>
+    <dimen name="bullet_width">2dp</dimen>
 </resources>

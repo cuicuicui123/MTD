@@ -31,6 +31,8 @@ public class Enemy {
 
     private AppContext mAppContext;
 
+    private float mDistance;
+
     public Enemy() {
         mAppContext = AppContext.getInstance();
         mPicRes = R.drawable.enemy2;
@@ -39,6 +41,7 @@ public class Enemy {
         mWidth = mAppContext.getWindowHeight() / 8;
         mHeight = mWidth;
         mPosition = mAppContext.RIGHT;
+        mDistance = (mAppContext.getGridWidth() - mWidth) / 2;
         getEnemyWidthAndHeight();
     }
 
@@ -142,11 +145,19 @@ public class Enemy {
         mWait = wait;
     }
 
+    public float getDistance() {
+        return mDistance;
+    }
+
     public void drawSelf(Canvas canvas){
         mPosition ++;
         Rect rectRes = new Rect(mPosition % 16 * mEnemyWidth, mDirection * mEnemyHeight,
                 (mPosition % 4 + 1) * mEnemyWidth, (mDirection + 1) * mEnemyHeight);
-        Rect rectDest = new Rect((int)mLocationX, (int)mLocationY, (int)mLocationX + mWidth, (int)mLocationY + mHeight);
+        int left = (int) (mLocationX);
+        int top = (int) mLocationY;
+        int right = (int) (mLocationX + mWidth);
+        int bottom = (int) (mLocationY + mHeight);
+        Rect rectDest = new Rect(left, top, right, bottom);
         canvas.drawBitmap(BitmapFactory.decodeResource(mAppContext.getResources(), getPicRes()), rectRes, rectDest, null);
     }
 

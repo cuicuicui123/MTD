@@ -25,13 +25,16 @@ public class EnemyPresenterImpl implements EnemyPresenter {
     private int mCurrentWave = 0;
     private double mWait;
     private long mCurrentTime;
+    private GameManager mGameManager;
 
     public EnemyPresenterImpl(PathNode rootNode) {
         mAllEnemyList = new ArrayList<>();
-        mCurrentEnemyList = new ArrayList<>();
+
         mAppContext = AppContext.getInstance();
         mRootNode = rootNode;
         mFirstNode = mRootNode.getThatNode();
+        mGameManager = GameManager.getInstance();
+        mCurrentEnemyList = mGameManager.getCurrentEnemyList();
         initEnemy();
     }
 
@@ -172,7 +175,7 @@ public class EnemyPresenterImpl implements EnemyPresenter {
     private double calculateDistance(Enemy enemy, PathNode thatNode){
         float enemyX = enemy.getLocationX();
         float enemyY = enemy.getLocationY();
-        float nodeX = (float) ((thatNode.getLocationX() - 0.5) * mAppContext.getGridWidth());
+        float nodeX = (float) ((thatNode.getLocationX() - 0.5) * mAppContext.getGridWidth() + enemy.getDistance());
         float nodeY = thatNode.getLocationY() * mAppContext.getGridHeight();
         double distance = Math.sqrt(Math.pow(enemyX - nodeX, 2) + Math.pow(enemyY - nodeY, 2));
         return distance;
