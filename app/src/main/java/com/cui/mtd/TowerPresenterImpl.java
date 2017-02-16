@@ -95,6 +95,7 @@ public class TowerPresenterImpl implements TowerPresenter {
                         mGridMap.setBacColor(mWhite);
                         Tower tower = new Tower();
                         tower.setNodeObject(nodeObject);
+                        nodeObject.setPlace(false);
                         mTowerList.add(tower);
                         mHasSelectTower = false;
                     } else {
@@ -114,11 +115,11 @@ public class TowerPresenterImpl implements TowerPresenter {
     public void drawTower() {
         for (Tower tower:mTowerList) {
             NodeObject nodeObject = tower.getNodeObject();
-            Rect rectSrc = new Rect(0, 0, mSelectTowerWidth, mSelectTowerHeight);
-            int left = nodeObject.getLocationX() * mAppContext.getGridWidth() + (mAppContext.getGridWidth() - mRealWidth) / 2;
-            int top = nodeObject.getLocationY() * mAppContext.getGridHeight() + (mAppContext.getGridHeight() - mRealHeight) / 2;
-            int right = (nodeObject.getLocationX() + 1) * mAppContext.getGridWidth() - (mAppContext.getGridWidth() - mRealWidth) / 2;
-            int bottom = (nodeObject.getLocationY() + 1) * mAppContext.getGridHeight() - (mAppContext.getGridHeight() - mRealHeight) / 2;
+            Rect rectSrc = new Rect(0, 0, tower.getWidth(), tower.getHeight());
+            int left = nodeObject.getLocationX() * mAppContext.getGridWidth() + (mAppContext.getGridWidth() - tower.getRealWidth()) / 2;
+            int top = nodeObject.getLocationY() * mAppContext.getGridHeight() + (mAppContext.getGridHeight() - tower.getRealHeight()) / 2;
+            int right = (nodeObject.getLocationX() + 1) * mAppContext.getGridWidth() - (mAppContext.getGridWidth() - tower.getRealWidth()) / 2;
+            int bottom = (nodeObject.getLocationY() + 1) * mAppContext.getGridHeight() - (mAppContext.getGridHeight() - tower.getRealHeight()) / 2;
             Rect rectDest = new Rect(left, top, right, bottom);
             mCanvas.drawBitmap(BitmapFactory.decodeResource(mAppContext.getResources(), R.drawable.tower), rectSrc, rectDest, null);
         }

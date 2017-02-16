@@ -252,6 +252,8 @@ public class GridMap {
     public NodeObject findNodeObjectByLocation(float x, float y){
         int locationX = (int) (x / mAppContext.getGridWidth());
         int locationY = (int) (y / mAppContext.getGridHeight());
+        locationX = locationX >= 11 ? 11 : locationX;
+        locationY = locationY >= 7 ? 7 : locationY;
         return mNodeObjects[locationX][locationY];
     }
 
