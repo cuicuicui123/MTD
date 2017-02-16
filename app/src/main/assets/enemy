@@ -1,20 +1,20 @@
 {
   "Enemies":[
-    {"Wave":1, "EnemyName":"Enemy", "Level":1, "Wait":0.5},
-    {"Wave":2, "EnemyName":"Enemy", "Level":2, "Wait":0.45},
-    {"Wave":2, "EnemyName":"Enemy", "Level":2, "Wait":0.45},
-    {"Wave":3, "EnemyName":"Enemy", "Level":3, "Wait":0.4},
-    {"Wave":3, "EnemyName":"Enemy", "Level":3, "Wait":0.4},
-    {"Wave":3, "EnemyName":"Enemy", "Level":3, "Wait":0.4},
-    {"Wave":4, "EnemyName":"Enemy", "Level":4, "Wait":0.35},
-    {"Wave":4, "EnemyName":"Enemy", "Level":4, "Wait":0.35},
-    {"Wave":4, "EnemyName":"Enemy", "Level":4, "Wait":0.35},
-    {"Wave":4, "EnemyName":"Enemy", "Level":4, "Wait":0.35},
-    {"Wave":5, "EnemyName":"Enemy", "Level":5, "Wait":0.3},
-    {"Wave":5, "EnemyName":"Enemy", "Level":5, "Wait":0.3},
-    {"Wave":5, "EnemyName":"Enemy", "Level":5, "Wait":0.3},
-    {"Wave":5, "EnemyName":"Enemy", "Level":5, "Wait":0.3},
-    {"Wave":5, "EnemyName":"Enemy", "Level":5, "Wait":0.3},
-    {"Wave":6, "EnemyName":"Enemy", "Level":99, "Wait":0.15}
+    {"Wave":1, "EnemyName":"Enemy", "Level":1, "Wait":10},
+    {"Wave":2, "EnemyName":"Enemy", "Level":2, "Wait":9},
+    {"Wave":2, "EnemyName":"Enemy", "Level":2, "Wait":9},
+    {"Wave":3, "EnemyName":"Enemy", "Level":3, "Wait":8},
+    {"Wave":3, "EnemyName":"Enemy", "Level":3, "Wait":8},
+    {"Wave":3, "EnemyName":"Enemy", "Level":3, "Wait":8},
+    {"Wave":4, "EnemyName":"Enemy", "Level":4, "Wait":7},
+    {"Wave":4, "EnemyName":"Enemy", "Level":4, "Wait":7},
+    {"Wave":4, "EnemyName":"Enemy", "Level":4, "Wait":7},
+    {"Wave":4, "EnemyName":"Enemy", "Level":4, "Wait":7},
+    {"Wave":5, "EnemyName":"Enemy", "Level":5, "Wait":6},
+    {"Wave":5, "EnemyName":"Enemy", "Level":5, "Wait":6},
+    {"Wave":5, "EnemyName":"Enemy", "Level":5, "Wait":6},
+    {"Wave":5, "EnemyName":"Enemy", "Level":5, "Wait":6},
+    {"Wave":5, "EnemyName":"Enemy", "Level":5, "Wait":6},
+    {"Wave":6, "EnemyName":"Enemy", "Level":99, "Wait":3}
   ]
 }

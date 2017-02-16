@@ -50,6 +50,8 @@ public class EnemyPresenterImpl implements EnemyPresenter {
                 enemy.setLevel(enemyJson.getInt("Level"));
                 enemy.setWait(enemyJson.getDouble("Wait"));
                 enemy.setTargetNode(mFirstNode);
+                enemy.setLocationX(mFirstNode.getLocationX() * mAppContext.getGridWidth());
+                enemy.setLocationY(mFirstNode.getLocationY() * mAppContext.getGridHeight());
                 mAllEnemyList.add(enemy);
             }
         } catch (JSONException e) {
@@ -138,29 +140,33 @@ public class EnemyPresenterImpl implements EnemyPresenter {
      */
     @Override
     public void enemyAppear() {
-        if (mCurrentWave == 0) {
-            Enemy enemy = mAllEnemyList.get(0);
-            mCurrentEnemyList.add(enemy);
-            mAllEnemyList.remove(0);
-            mCurrentWave = enemy.getWave();
-            mCurrentTime = System.currentTimeMillis();
-            mWait = enemy.getWait();
-        } else {
-            Enemy enemy = mAllEnemyList.get(0);
-            if (enemy.getWave() == mCurrentWave) {
-                if (System.currentTimeMillis() - mCurrentTime >= enemy.getWait() * 1000) {
-                    mCurrentEnemyList.add(enemy);
-                    mAllEnemyList.remove(0);
-                    mCurrentTime = System.currentTimeMillis();
-                }
+        if (mAllEnemyList.size() > 0) {
+            if (mCurrentWave == 0) {
+                Enemy enemy = mAllEnemyList.get(0);
+                mCurrentEnemyList.add(enemy);
+                mAllEnemyList.remove(0);
+                mCurrentWave = enemy.getWave();
+                mCurrentTime = System.currentTimeMillis();
+                mWait = enemy.getWait();
             } else {
-                if (mCurrentEnemyList.size() <= 0) {
-                    mCurrentEnemyList.add(enemy);
-                    mAllEnemyList.remove(0);
-                    mCurrentTime = System.currentTimeMillis();
+                Enemy enemy = mAllEnemyList.get(0);
+                if (enemy.getWave() == mCurrentWave) {
+                    if (System.currentTimeMillis() - mCurrentTime >= enemy.getWait() * 1000) {
+                        mCurrentEnemyList.add(enemy);
+                        mAllEnemyList.remove(0);
+                        mCurrentTime = System.currentTimeMillis();
+                    }
+                } else {
+                    if (mCurrentEnemyList.size() <= 0) {
+                        mCurrentEnemyList.add(enemy);
+                        mCurrentWave = enemy.getWave();
+                        mAllEnemyList.remove(0);
+                        mCurrentTime = System.currentTimeMillis();
+                    }
                 }
             }
         }
+
     }
 
     private double calculateDistance(Enemy enemy, PathNode thatNode){
