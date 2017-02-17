@@ -2,6 +2,7 @@ package com.cui.mtd;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 
 /**
  * Created by Cui on 2017/2/16.
@@ -18,13 +19,16 @@ public class Bullet {
     private float mLocationX;
     private float mLocationY;
 
+    private Rect mRectRes;
+
     public Bullet() {
         mPicId = R.drawable.bullet3;
         mAppContext = AppContext.getInstance();
         mPic = BitmapFactory.decodeResource(mAppContext.getResources(), mPicId);
         mWidth = mPic.getWidth();
         mHeight = mPic.getHeight();
-        mSpeed = mAppContext.getWindowWidth() / 20 / 24 * 2;
+        mSpeed = mAppContext.getWindowWidth() / 20 / 24 * 10;
+        mRectRes = new Rect(0, 0, mWidth, mHeight);
     }
 
     public int getPicId() {
@@ -69,5 +73,10 @@ public class Bullet {
 
     public void setLocationY(float locationY) {
         mLocationY = locationY;
+    }
+
+
+    public Rect getRectRes() {
+        return mRectRes;
     }
 }
