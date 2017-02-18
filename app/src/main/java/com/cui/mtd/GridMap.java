@@ -115,12 +115,13 @@ public class GridMap {
      * 绘制颜色块
      */
     private void drawColorRect(){
+        int blue = mAppContext.getResources().getColor(R.color.colorPrimary);
         int red = mAppContext.getResources().getColor(R.color.red);
         int green = mAppContext.getResources().getColor(R.color.green);
         for (int i = 0;i < 12;i ++) {
             for (int j = 0;j < 8;j ++) {
                 NodeObject nodeObject = mNodeObjects[i][j];
-                mGridRectPaint.setColor(nodeObject.isPlace() ? mBacColor : red);
+                mGridRectPaint.setColor(nodeObject.isPlace() ? mBacColor : blue);
                 float right = i == 11 ? mDisplayWidth : (i + 1) * mGridWidth;
                 float bottom = j == 7 ? mDisplayHeight : (j + 1) * mGridHeight;
                 mCanvas.drawRect(i * mGridWidth, j * mGridHeight, right, bottom, mGridRectPaint);

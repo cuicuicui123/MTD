@@ -3,7 +3,11 @@ package com.cui.mtd;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Cui on 2017/2/14.
@@ -31,7 +35,11 @@ public class Enemy {
 
     private AppContext mAppContext;
 
+    private Paint mHpPaint;
+
     private float mDistance;
+
+    private List<Tower> mTowerList;
 
     public Enemy() {
         mAppContext = AppContext.getInstance();
@@ -42,6 +50,9 @@ public class Enemy {
         mHeight = mWidth;
         mPosition = mAppContext.RIGHT;
         mDistance = (mAppContext.getGridWidth() - mWidth) / 2;
+        mHpPaint = new Paint();
+        mHpPaint.setColor(mAppContext.getResources().getColor(R.color.red));
+        mTowerList = new ArrayList<>();
         getEnemyWidthAndHeight();
     }
 
@@ -149,6 +160,18 @@ public class Enemy {
         return mDistance;
     }
 
+    public void setHp(int hp) {
+        mHp = hp;
+    }
+
+    public List<Tower> getTowerList() {
+        return mTowerList;
+    }
+
+    public void setTowerList(List<Tower> towerList) {
+        mTowerList = towerList;
+    }
+
     public void drawSelf(Canvas canvas){
         mPosition ++;
         Rect rectRes = new Rect(mPosition % 16 * mEnemyWidth, mDirection * mEnemyHeight,
@@ -159,6 +182,9 @@ public class Enemy {
         int bottom = (int) (mLocationY + mHeight);
         Rect rectDest = new Rect(left, top, right, bottom);
         canvas.drawBitmap(BitmapFactory.decodeResource(mAppContext.getResources(), getPicRes()), rectRes, rectDest, null);
+        if (mHp > 0) {
+            canvas.drawRect(mLocationX, mLocationY - 5, mLocationX + mHp * mWidth / 40 , mLocationY, mHpPaint);
+        }
     }
 
 

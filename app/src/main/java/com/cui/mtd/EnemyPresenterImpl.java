@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -93,48 +94,54 @@ public class EnemyPresenterImpl implements EnemyPresenter {
     public void setCanvas(Canvas canvas) {
         mCanvas = canvas;
         enemyAppear();
-        for (Enemy enemy: mCurrentEnemyList) {
-            enemy.drawSelf(canvas);
-        }
+//        for (Enemy enemy: mCurrentEnemyList) {
+//            enemy.drawSelf(canvas);
+//        }
     }
 
     @Override
     public void move() {
         //先计算移动方向，上下左右四个方向
-        for (Enemy enemy: mCurrentEnemyList) {
-            PathNode thisNode = enemy.getTargetNode();
-            PathNode thatNode = thisNode.getThatNode();
-            double dis = calculateDistance(enemy, thatNode);
-            if (dis < 3d) {
-                if (thatNode.getThatNode() != null) {
-                    enemy.setTargetNode(thatNode);
-                    thisNode = thatNode;
-                    thatNode = thisNode.getThatNode();
-                } else {
-                    mCurrentEnemyList.remove(enemy);
-                    return;
+        Iterator iterator = mCurrentEnemyList.iterator();
+        while (iterator.hasNext()) {
+            Enemy enemy = (Enemy) iterator.next();
+            if (enemy.getHp() > 0) {
+                PathNode thisNode = enemy.getTargetNode();
+                PathNode thatNode = thisNode.getThatNode();
+                double dis = calculateDistance(enemy, thatNode);
+                if (dis < 3d) {
+                    if (thatNode.getThatNode() != null) {
+                        enemy.setTargetNode(thatNode);
+                        thisNode = thatNode;
+                        thatNode = thisNode.getThatNode();
+                    } else {
+                        mCurrentEnemyList.remove(enemy);
+                        return;
+                    }
                 }
-            }
-            if (thisNode.getLocationX() < thatNode.getLocationX()) {//右
-                enemy.setLocationX(enemy.getLocationX() + enemy.getSpeed());
-                enemy.setPosition(mAppContext.RIGHT);
-            }
+                if (thisNode.getLocationX() < thatNode.getLocationX()) {//右
+                    enemy.setLocationX(enemy.getLocationX() + enemy.getSpeed());
+                    enemy.setPosition(mAppContext.RIGHT);
+                }
 
-            if (thisNode.getLocationY() < thatNode.getLocationY()) {//下
-                enemy.setLocationY(enemy.getLocationY() + enemy.getSpeed());
-                enemy.setPosition(mAppContext.BOTTOM);
-            }
+                if (thisNode.getLocationY() < thatNode.getLocationY()) {//下
+                    enemy.setLocationY(enemy.getLocationY() + enemy.getSpeed());
+                    enemy.setPosition(mAppContext.BOTTOM);
+                }
 
-            if (thisNode.getLocationX() > thatNode.getLocationX()) {//左
-                enemy.setLocationX(enemy.getLocationX() - enemy.getSpeed());
-                enemy.setPosition(mAppContext.LEFT);
-            }
+                if (thisNode.getLocationX() > thatNode.getLocationX()) {//左
+                    enemy.setLocationX(enemy.getLocationX() - enemy.getSpeed());
+                    enemy.setPosition(mAppContext.LEFT);
+                }
 
-            if (thisNode.getLocationY() > thatNode.getLocationY()) {//上
-                enemy.setLocationY(enemy.getLocationY() - enemy.getSpeed());
-                enemy.setPosition(mAppContext.TOP);
+                if (thisNode.getLocationY() > thatNode.getLocationY()) {//上
+                    enemy.setLocationY(enemy.getLocationY() - enemy.getSpeed());
+                    enemy.setPosition(mAppContext.TOP);
+                }
+                enemy.drawSelf(mCanvas);
+            } else {
+                iterator.remove();
             }
-            enemy.drawSelf(mCanvas);
         }
     }
 
@@ -170,6 +177,11 @@ public class EnemyPresenterImpl implements EnemyPresenter {
             }
         }
 
+    }
+
+    @Override
+    public void enemyDie(Enemy enemy) {
+        mCurrentEnemyList.remove(enemy);
     }
 
     private double calculateDistance(Enemy enemy, PathNode thatNode){

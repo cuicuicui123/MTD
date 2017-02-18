@@ -86,9 +86,10 @@ public class GameManager {
         if (dis < tower.getRange()) {//表示到达射击距离
             //如果防御塔没有子弹就生成子弹
             //有子弹了就让子弹继续飞行，直到子弹到达目标就重新生成
-            if (tower.getBullet() == null) {
+            if (tower.getBullet() == null || !tower.getBullet().isAlive()) {
                 Bullet bullet = tower.createBullet();
                 tower.setTarget(enemy);
+                enemy.getTowerList().add(tower);
                 bullet.setTarget(enemy);
                 mBulletList.add(bullet);
             }
@@ -126,7 +127,11 @@ public class GameManager {
             } else {
                 //到达敌人后移除子弹
                 iterator.remove();
-                bullet = null;
+                bullet.setAlive(false);
+                enemy.setHp(enemy.getHp() - bullet.getDamage());
+                for (Tower tower: enemy.getTowerList()) {
+                    tower.setTarget(null);
+                }
             }
         }
 

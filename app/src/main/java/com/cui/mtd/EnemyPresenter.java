@@ -17,4 +17,5 @@ public interface EnemyPresenter {
     void setCanvas(Canvas canvas);
     void move();
     void enemyAppear();
+    void enemyDie(Enemy enemy);
 }
