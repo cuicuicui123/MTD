@@ -1,6 +1,9 @@
 package com.cui.mtd;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +31,8 @@ public class EnemyPresenterImpl implements EnemyPresenter {
     private long mCurrentTime;
     private GameManager mGameManager;
 
+    private int mExpResId;
+
     public EnemyPresenterImpl(PathNode rootNode) {
         mAllEnemyList = new ArrayList<>();
 
@@ -36,6 +41,7 @@ public class EnemyPresenterImpl implements EnemyPresenter {
         mFirstNode = mRootNode.getThatNode();
         mGameManager = GameManager.getInstance();
         mCurrentEnemyList = mGameManager.getCurrentEnemyList();
+        mExpResId = R.drawable.explosion;
         initEnemy();
     }
 
@@ -140,9 +146,25 @@ public class EnemyPresenterImpl implements EnemyPresenter {
                 }
                 enemy.drawSelf(mCanvas);
             } else {
-                iterator.remove();
+                if (enemy.getExpTime() < 10) {
+                    drawExplosion(enemy);
+                } else {
+                    iterator.remove();
+                }
             }
         }
+    }
+
+    private void drawExplosion(Enemy enemy){
+        int expTime = enemy.getExpTime();
+        Bitmap bitmap = BitmapFactory.decodeResource(mAppContext.getResources(), mExpResId);
+        int mExpWidth = bitmap.getWidth() / 10;
+        float x = enemy.getLocationX();
+        float y = enemy.getLocationY();
+        Rect srcRect = new Rect(expTime * mExpWidth, 0, (expTime + 1) * mExpWidth, mExpWidth);
+        Rect destRect = new Rect((int) x, (int)y, (int) x + enemy.getWidth(), (int) y + enemy.getHeight());
+        mCanvas.drawBitmap(bitmap, srcRect, destRect, null);
+        enemy.setExpTime(expTime + 1);
     }
 
     /**

@@ -41,6 +41,8 @@ public class Enemy {
 
     private List<Tower> mTowerList;
 
+    private int mExpTime;
+
     public Enemy() {
         mAppContext = AppContext.getInstance();
         mPicRes = R.drawable.enemy2;
@@ -53,6 +55,7 @@ public class Enemy {
         mHpPaint = new Paint();
         mHpPaint.setColor(mAppContext.getResources().getColor(R.color.red));
         mTowerList = new ArrayList<>();
+        mExpTime = 0;
         getEnemyWidthAndHeight();
     }
 
@@ -170,6 +173,15 @@ public class Enemy {
 
     public void setTowerList(List<Tower> towerList) {
         mTowerList = towerList;
+    }
+
+
+    public int getExpTime() {
+        return mExpTime;
+    }
+
+    public void setExpTime(int expTime) {
+        mExpTime = expTime;
     }
 
     public void drawSelf(Canvas canvas){

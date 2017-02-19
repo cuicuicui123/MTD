@@ -58,13 +58,15 @@ public class GameManager {
         //遍历防御塔list和敌人list，判断是否射击
         for (Tower tower:mCurrentTowerList) {
             for (Enemy enemy : mCurrentEnemyList) {
-                //没有目标就判断当前敌人与防御塔
-                if (tower.getTarget() == null) {
-                    calculateDistance(tower, enemy);
-                } else {
-                    //有目标就判断当前敌人是不是目标，是的话才判断距离
-                    if (tower.getTarget().equals(enemy)) {
+                if (enemy.getHp() > 0) {
+                    //没有目标就判断当前敌人与防御塔
+                    if (tower.getTarget() == null) {
                         calculateDistance(tower, enemy);
+                    } else {
+                        //有目标就判断当前敌人是不是目标，是的话才判断距离
+                        if (tower.getTarget().equals(enemy)) {
+                            calculateDistance(tower, enemy);
+                        }
                     }
                 }
             }
@@ -134,6 +136,6 @@ public class GameManager {
                 }
             }
         }
-
     }
+
 }
