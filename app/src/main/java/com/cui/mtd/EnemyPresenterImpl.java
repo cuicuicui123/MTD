@@ -16,6 +16,7 @@ import java.util.List;
 
 /**
  * Created by Cui on 2017/2/14.
+ * 敌人逻辑处理类
  */
 
 public class EnemyPresenterImpl implements EnemyPresenter {
@@ -45,6 +46,9 @@ public class EnemyPresenterImpl implements EnemyPresenter {
         initEnemy();
     }
 
+    /**
+     * 根据json确定怪物
+     */
     @Override
     public void initEnemy() {
         String result = getFromAssets("enemy");
@@ -69,7 +73,11 @@ public class EnemyPresenterImpl implements EnemyPresenter {
         }
     }
 
-    //从assets 文件夹中获取文件并读取数据
+    /**
+     * 从assets 文件夹中获取文件并读取数据确定出怪顺序
+     * @param fileName
+     * @return
+     */
     public String getFromAssets(String fileName){
         String result = "";
         try {
@@ -100,23 +108,23 @@ public class EnemyPresenterImpl implements EnemyPresenter {
     public void setCanvas(Canvas canvas) {
         mCanvas = canvas;
         enemyAppear();
-//        for (Enemy enemy: mCurrentEnemyList) {
-//            enemy.drawSelf(canvas);
-//        }
     }
 
+    /**
+     * 敌人移动
+     */
     @Override
     public void move() {
         //先计算移动方向，上下左右四个方向
         Iterator iterator = mCurrentEnemyList.iterator();
         while (iterator.hasNext()) {
             Enemy enemy = (Enemy) iterator.next();
-            if (enemy.getHp() > 0) {
-                PathNode thisNode = enemy.getTargetNode();
-                PathNode thatNode = thisNode.getThatNode();
+            if (enemy.getHp() > 0) {//判断是否血量大于0，小于0爆炸
+                PathNode thisNode = enemy.getTargetNode();//当前节点
+                PathNode thatNode = thisNode.getThatNode();//下一个节点根据这两个节点判断移动方向
                 double dis = calculateDistance(enemy, thatNode);
-                if (dis < 3d) {
-                    if (thatNode.getThatNode() != null) {
+                if (dis < 3d) {//表示移动到下一个节点
+                    if (thatNode.getThatNode() != null) {//判断是否走完了
                         enemy.setTargetNode(thatNode);
                         thisNode = thatNode;
                         thatNode = thisNode.getThatNode();
@@ -145,7 +153,7 @@ public class EnemyPresenterImpl implements EnemyPresenter {
                     enemy.setPosition(mAppContext.TOP);
                 }
                 enemy.drawSelf(mCanvas);
-            } else {
+            } else {//爆炸
                 if (enemy.getExpTime() < 10) {
                     drawExplosion(enemy);
                 } else {
@@ -155,6 +163,10 @@ public class EnemyPresenterImpl implements EnemyPresenter {
         }
     }
 
+    /**
+     * boom
+     * @param enemy
+     */
     private void drawExplosion(Enemy enemy){
         int expTime = enemy.getExpTime();
         Bitmap bitmap = BitmapFactory.decodeResource(mAppContext.getResources(), mExpResId);
@@ -173,7 +185,7 @@ public class EnemyPresenterImpl implements EnemyPresenter {
     @Override
     public void enemyAppear() {
         if (mAllEnemyList.size() > 0) {
-            if (mCurrentWave == 0) {
+            if (mCurrentWave == 0) {//表示当前是第一波
                 Enemy enemy = mAllEnemyList.get(0);
                 mCurrentEnemyList.add(enemy);
                 mAllEnemyList.remove(0);
@@ -182,13 +194,13 @@ public class EnemyPresenterImpl implements EnemyPresenter {
                 mWait = enemy.getWait();
             } else {
                 Enemy enemy = mAllEnemyList.get(0);
-                if (enemy.getWave() == mCurrentWave) {
+                if (enemy.getWave() == mCurrentWave) {//如果是当前波次等待给定时间间隔后出怪
                     if (System.currentTimeMillis() - mCurrentTime >= enemy.getWait() * 1000) {
                         mCurrentEnemyList.add(enemy);
                         mAllEnemyList.remove(0);
                         mCurrentTime = System.currentTimeMillis();
                     }
-                } else {
+                } else {//不是当前波次等待这波怪全都走完之后生成下一波
                     if (mCurrentEnemyList.size() <= 0) {
                         mCurrentEnemyList.add(enemy);
                         mCurrentWave = enemy.getWave();

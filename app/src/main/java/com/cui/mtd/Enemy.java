@@ -11,12 +11,14 @@ import java.util.List;
 
 /**
  * Created by Cui on 2017/2/14.
+ * 敌人类
  */
 
 public class Enemy {
     private int mPicRes;
     private float mSpeed;
     private int mHp;
+    private int mAllHp;
     private int mWidth;
     private int mHeight;
     private int mEnemyWidth;
@@ -27,6 +29,7 @@ public class Enemy {
     private String mName;
     private int mLevel;
     private double mWait;
+    private int mValue;
 
     private float mLocationX;
     private float mLocationY;
@@ -59,6 +62,9 @@ public class Enemy {
         getEnemyWidthAndHeight();
     }
 
+    /**
+     * 根据敌人图片大小确定敌人大小
+     */
     private void getEnemyWidthAndHeight(){
         Bitmap bitmap = BitmapFactory.decodeResource(mAppContext.getResources(), mPicRes);
         mEnemyWidth = bitmap.getWidth() / 4;
@@ -147,8 +153,14 @@ public class Enemy {
         return mLevel;
     }
 
+    /**
+     * 根据敌人等级确定血量和价值
+     * @param level
+     */
     public void setLevel(int level) {
         mLevel = level;
+        mAllHp = mHp = mLevel * 40;
+        mValue = mLevel * 2;
     }
 
     public double getWait() {
@@ -184,6 +196,18 @@ public class Enemy {
         mExpTime = expTime;
     }
 
+    public int getValue() {
+        return mValue;
+    }
+
+    public void setValue(int value) {
+        mValue = value;
+    }
+
+    /**
+     * 绘制自己和血量
+     * @param canvas
+     */
     public void drawSelf(Canvas canvas){
         mPosition ++;
         Rect rectRes = new Rect(mPosition % 16 * mEnemyWidth, mDirection * mEnemyHeight,
@@ -194,8 +218,9 @@ public class Enemy {
         int bottom = (int) (mLocationY + mHeight);
         Rect rectDest = new Rect(left, top, right, bottom);
         canvas.drawBitmap(BitmapFactory.decodeResource(mAppContext.getResources(), getPicRes()), rectRes, rectDest, null);
+        //绘制血量
         if (mHp > 0) {
-            canvas.drawRect(mLocationX, mLocationY - 5, mLocationX + mHp * mWidth / 40 , mLocationY, mHpPaint);
+            canvas.drawRect(mLocationX, mLocationY - 5, mLocationX + mHp * mWidth / mAllHp, mLocationY, mHpPaint);
         }
     }
 

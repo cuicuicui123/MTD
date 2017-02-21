@@ -6,6 +6,7 @@ import android.graphics.Rect;
 
 /**
  * Created by Cui on 2017/2/16.
+ * 子弹类
  */
 
 public class Bullet {

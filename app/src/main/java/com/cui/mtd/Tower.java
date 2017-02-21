@@ -21,6 +21,7 @@ public class Tower {
     private int mHeight;
     private int mRealWidth;
     private int mRealHeight;
+    private int mValue;
     private Bitmap mPic;
 
     public Tower() {
@@ -33,6 +34,7 @@ public class Tower {
         mRealWidth = sizeHelper.getRealWidth();
         mRealHeight = sizeHelper.getRealHeight();
         mRange = mAppContext.getGridHeight() * 3 / 2;
+        mValue = 10;
     }
 
     public NodeObject getNodeObject() {
@@ -95,5 +97,13 @@ public class Tower {
 
     public Bitmap getPic() {
         return mPic;
+    }
+
+    public int getValue() {
+        return mValue;
+    }
+
+    public void setValue(int value) {
+        mValue = value;
     }
 }

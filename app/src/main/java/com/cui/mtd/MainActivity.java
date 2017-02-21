@@ -3,6 +3,11 @@ package com.cui.mtd;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+/**
+ * Created by Cui on 2017/2/9.
+ * 主界面
+ */
+
 public class MainActivity extends AppCompatActivity {
     private GameView mGameView;
 

@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * Created by Cui on 2017/2/14.
+ * 防御塔逻辑处理类
  */
 
 public class TowerPresenterImpl implements TowerPresenter {
@@ -80,23 +81,33 @@ public class TowerPresenterImpl implements TowerPresenter {
         mCanvas.drawBitmap(BitmapFactory.decodeResource(mAppContext.getResources(), R.drawable.tower), rectSrc, rectDest, null);
     }
 
+    /**
+     * 处理点击事件，选择建造防御塔
+     * @param event
+     * @return
+     */
     @Override
     public boolean handleTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 NodeObject nodeObject = mGridMap.findNodeObjectByLocation(event.getX(), event.getY());
-                if (!mHasSelectTower) {
+                if (!mHasSelectTower) {//没有选择塔
                     if (nodeObject.isSelectTower()) {
-                        mGridMap.setBacColor(mGreen);
-                        mHasSelectTower = true;
+                        if (mGridMap.getMoney() >= new Tower().getValue()) {//判断钱够不够
+                            mGridMap.setBacColor(mGreen);
+                            mHasSelectTower = true;
+                        } else {
+                            mAppContext.makeToast("金钱不足！");
+                        }
                     }
-                } else {
+                } else {//选择了防御塔
                     if (nodeObject.isPlace()) {
                         mGridMap.setBacColor(mWhite);
                         Tower tower = new Tower();
                         tower.setNodeObject(nodeObject);
                         nodeObject.setPlace(false);
                         mTowerList.add(tower);
+                        mGridMap.setMoney(mGridMap.getMoney() - tower.getValue());
                         mHasSelectTower = false;
                     } else {
                         mAppContext.makeToast("此处不可建造防御塔！");
@@ -111,6 +122,9 @@ public class TowerPresenterImpl implements TowerPresenter {
         return true;
     }
 
+    /**
+     * 绘制防御塔
+     */
     @Override
     public void drawTower() {
         for (Tower tower:mTowerList) {

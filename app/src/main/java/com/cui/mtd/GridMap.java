@@ -22,6 +22,7 @@ public class GridMap {
     private int mBacColor;
     private int mWhite;
     private int mGreen;
+    private int mMoney;
 
     private Canvas mCanvas;
     private AppContext mAppContext;
@@ -33,6 +34,7 @@ public class GridMap {
     private Paint mBacPaint;
     private Paint mGridRectPaint;
     private Paint mPathPaint;
+    private Paint mMoneyPaint;
 
     private boolean mHasSelectTower = false;
 
@@ -59,6 +61,10 @@ public class GridMap {
         mGreen = mAppContext.getResources().getColor(R.color.green);
         mWhite = mAppContext.getResources().getColor(R.color.white);
         mBacColor = mWhite;
+        mMoney = 20;
+        mMoneyPaint = new Paint();
+        mMoneyPaint.setColor(mAppContext.getResources().getColor(R.color.black));
+        mMoneyPaint.setTextSize(mAppContext.getResources().getDimension(R.dimen.money_text_size));
         initNodeObject();
         initPath();
     }
@@ -81,6 +87,7 @@ public class GridMap {
         drawColorRect();
         drawGrid();
         drawPathNode(mRootNode.getThatNode());
+        drawMoney();
     }
 
     /**
@@ -262,6 +269,22 @@ public class GridMap {
         mBacColor = color;
     }
 
+    public int getMoney() {
+        return mMoney;
+    }
 
+    public void setMoney(int money) {
+        mMoney = money;
+    }
+
+    /**
+     * 绘制金钱
+     */
+    private void drawMoney(){
+        float textWidth = mMoneyPaint.measureText("金钱：" + mMoney);
+        float x = mAppContext.getWindowWidth() -  textWidth - mAppContext.getGridWidth() / 2;
+        float y = (mAppContext.getGridHeight()) / 2;
+        mCanvas.drawText("金钱：" + mMoney, x, y, mMoneyPaint);
+    }
 
 }

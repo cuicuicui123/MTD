@@ -2,6 +2,8 @@ package com.cui.mtd;
 
 /**
  * Created by Cui on 2017/2/15.
+ * 用来根据各自的大小约束防御塔大小
+ * 防御塔大小最大为格子那么大
  */
 
 public class SizeHelper {

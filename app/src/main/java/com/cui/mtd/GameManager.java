@@ -22,6 +22,7 @@ public class GameManager {
     private Paint mBulletPaint;
     private List<Tower> mBulletTowerList;
     private List<Bullet> mBulletList;
+    private GridMap mGridMap;
 
     private GameManager() {
         mAppContext = AppContext.getInstance();
@@ -32,6 +33,7 @@ public class GameManager {
         mBulletPaint.setStrokeWidth(mAppContext.getResources().getDimension(R.dimen.bullet_width));
         mBulletTowerList = new ArrayList<>();
         mBulletList = new ArrayList<>();
+        mGridMap = GridMap.getInstance();
     }
 
     public static GameManager getInstance(){
@@ -130,9 +132,14 @@ public class GameManager {
                 //到达敌人后移除子弹
                 iterator.remove();
                 bullet.setAlive(false);
+                //敌人减血
                 enemy.setHp(enemy.getHp() - bullet.getDamage());
-                for (Tower tower: enemy.getTowerList()) {
-                    tower.setTarget(null);
+                //敌人血量小于等于0，表示消灭了，金钱增加
+                if (enemy.getHp() <= 0) {
+                    mGridMap.setMoney(mGridMap.getMoney() + enemy.getValue());
+                    for (Tower tower: enemy.getTowerList()) {//敌人消灭后防御塔重置目标
+                        tower.setTarget(null);
+                    }
                 }
             }
         }
