@@ -52,6 +52,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         mDisplayWidth = mAppContext.getWindowWidth();
         mDisplayHeight = mAppContext.getWindowHeight();
         mGridMap = GridMap.getInstance();
+        mGridMap.setGameView(this);
         mGameManager = GameManager.getInstance();
 
         mEnemyPresenter = new EnemyPresenterImpl(mGridMap.getRootNode());
@@ -123,33 +124,41 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return mTowerPresenter.handleTouchEvent(event);
+        if (mGridMap.isStart()) {
+            return mTowerPresenter.handleTouchEvent(event);
+        } else {
+            return mGridMap.handleTouchEvent(event);
+        }
     }
 
     /**
      * surfaceView的主要线程
      */
     class MainThread extends Thread{
-        public boolean mStart;
+        private boolean start;
 
         public MainThread() {
             super();
-            mStart = true;
+            start = true;
         }
 
         @Override
         public void run() {
             super.run();
-            while (mStart) {
+            while (start) {
                 Canvas canvas = mHolder.lockCanvas();
-                if (canvas != null) {
-                    mGridMap.setCanvas(canvas);
-                    mEnemyPresenter.setCanvas(canvas);
-                    mEnemyPresenter.move();
-                    mTowerPresenter.setCanvas(canvas);
-                    mGameManager.setCanvas(canvas);
-                    mHolder.unlockCanvasAndPost(canvas);
+                if (mGridMap.isStart()) {
+                    if (canvas != null) {
+                        mGridMap.setCanvas(canvas);
+                        mEnemyPresenter.setCanvas(canvas);
+                        mEnemyPresenter.move();
+                        mTowerPresenter.setCanvas(canvas);
+                        mGameManager.setCanvas(canvas);
+
+                    }
                 }
+                mGridMap.drawStartOrPausePic();
+                mHolder.unlockCanvasAndPost(canvas);
                 try {
                     Thread.sleep(AppContext.TIME_SPAN);
                 } catch (InterruptedException e) {
@@ -162,7 +171,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
          * 线程提供停止自己的方法
          */
         public void stopThread(){
-            mStart = false;
+            start = false;
         }
     }
 

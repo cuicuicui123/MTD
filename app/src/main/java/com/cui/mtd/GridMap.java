@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.view.MotionEvent;
 
 /**
  * Created by Cui on 2017/2/9.
@@ -23,6 +24,10 @@ public class GridMap {
     private int mWhite;
     private int mGreen;
     private int mMoney;
+    private boolean mIsStart;
+    private Bitmap mStartOrPauseBitmap;
+    private Rect mStartOrPauseSrcRect;
+    private Rect mStartOrPauseDestRect;
 
     private Canvas mCanvas;
     private AppContext mAppContext;
@@ -38,7 +43,8 @@ public class GridMap {
 
     private boolean mHasSelectTower = false;
 
-    private static GridMap mInstance;
+    private static volatile GridMap mInstance;
+    private GameView mGameView;
 
     private GridMap() {
         mAppContext = AppContext.getInstance();
@@ -65,8 +71,23 @@ public class GridMap {
         mMoneyPaint = new Paint();
         mMoneyPaint.setColor(mAppContext.getResources().getColor(R.color.black));
         mMoneyPaint.setTextSize(mAppContext.getResources().getDimension(R.dimen.money_text_size));
+
+
+        iniStartOrPause();
         initNodeObject();
         initPath();
+    }
+
+    /**
+     * 初始化开始还是暂停图片
+     */
+    private void iniStartOrPause() {
+        mIsStart = true;
+        mStartOrPauseBitmap = BitmapFactory.decodeResource(mAppContext.getResources(), R.drawable.default_btn_play);
+        SizeHelper sizeHelper = new SizeHelper(mStartOrPauseBitmap.getWidth(), mStartOrPauseBitmap.getHeight());
+        mStartOrPauseSrcRect = new Rect(0, 0, mStartOrPauseBitmap.getWidth(), mStartOrPauseBitmap.getHeight());
+        mStartOrPauseDestRect = new Rect(mAppContext.getWindowWidth() - (mAppContext.getGridWidth() + sizeHelper.getRealWidth()) / 2, (mAppContext.getGridWidth() - sizeHelper.getRealWidth()) / 2,
+                mAppContext.getWindowWidth() - (mAppContext.getGridWidth() - sizeHelper.getRealWidth()) / 2, (mAppContext.getGridWidth() + sizeHelper.getRealWidth()) / 2);
     }
 
     public static GridMap getInstance(){
@@ -88,6 +109,7 @@ public class GridMap {
         drawGrid();
         drawPathNode(mRootNode.getThatNode());
         drawMoney();
+        drawStartOrPausePic();
     }
 
     /**
@@ -149,6 +171,7 @@ public class GridMap {
                 mNodeObjects[i][j] = nodeObject;
             }
         }
+        mNodeObjects[11][0].setStartOrPause(true);
     }
 
     public NodeObject[][] getNodeObjects(){
@@ -281,10 +304,59 @@ public class GridMap {
      * 绘制金钱
      */
     private void drawMoney(){
-        float textWidth = mMoneyPaint.measureText("金钱：" + mMoney);
-        float x = mAppContext.getWindowWidth() -  textWidth - mAppContext.getGridWidth() / 2;
+        float x = mAppContext.getGridWidth() / 2;
         float y = (mAppContext.getGridHeight()) / 2;
         mCanvas.drawText("金钱：" + mMoney, x, y, mMoneyPaint);
+    }
+
+    /**
+     * 绘制开始暂停按钮
+     */
+    public void drawStartOrPausePic(){
+        mCanvas.drawBitmap(mStartOrPauseBitmap, mStartOrPauseSrcRect, mStartOrPauseDestRect, null);
+    }
+
+    /**
+     * 设置开始或者暂停状态图片
+     */
+    public void setStart(boolean start){
+        mIsStart = start;
+        if (mIsStart) {
+            mStartOrPauseBitmap = BitmapFactory.decodeResource(mAppContext.getResources(), R.drawable.default_btn_play);
+            drawStartOrPausePic();
+//            mGameView.resume();
+        } else {
+            mStartOrPauseBitmap = BitmapFactory.decodeResource(mAppContext.getResources(), R.drawable.default_btn_pause);
+            drawStartOrPausePic();
+//            mGameView.pause();
+        }
+    }
+
+    public boolean isStart() {
+        return mIsStart;
+    }
+
+    /**
+     * 判断是否点到暂停按钮
+     * @param event
+     */
+    public boolean handleTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                NodeObject nodeObject = findNodeObjectByLocation(event.getX(), event.getY());
+                if (nodeObject.isStartOrPause()) {
+                    setStart(!mIsStart);
+                }
+                break;
+        }
+        return true;
+    }
+
+    /**
+     * 传入gameView
+     */
+    public void setGameView(GameView gameView){
+        mGameView = gameView;
     }
 
 }

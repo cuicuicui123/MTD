@@ -8,12 +8,15 @@ package com.cui.mtd;
 public class NodeObject {
     private boolean mPlace;
     private boolean mSelectTower;
+    private boolean mIsStartOrPause;
+
     private int mLocationX;
     private int mLocationY;
 
     public NodeObject() {
         mPlace = true;
         mSelectTower = false;
+        mIsStartOrPause = false;
     }
 
     public boolean isPlace() {
@@ -46,5 +49,13 @@ public class NodeObject {
 
     public void setLocationY(int locationY) {
         mLocationY = locationY;
+    }
+
+    public boolean isStartOrPause() {
+        return mIsStartOrPause;
+    }
+
+    public void setStartOrPause(boolean startOrPause) {
+        mIsStartOrPause = startOrPause;
     }
 }

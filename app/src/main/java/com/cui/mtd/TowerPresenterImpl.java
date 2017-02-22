@@ -99,6 +99,8 @@ public class TowerPresenterImpl implements TowerPresenter {
                         } else {
                             mAppContext.makeToast("金钱不足！");
                         }
+                    } else {//如果没有选择防御塔，也没有点到建造防御塔图标，则这里就不处理点击事件，交给地图类去判断是否点击暂停按钮
+                        mGridMap.handleTouchEvent(event);
                     }
                 } else {//选择了防御塔
                     if (nodeObject.isPlace()) {
